@@ -136,7 +136,7 @@ export class DigitSpanEngine {
     });
   }
 
-  submitAnswer(rawInput) {
+  evaluateAnswer(rawInput) {
     if (this.isDisplayingSequence) return null;
 
     const cleanedInput = String(rawInput || '').replace(/\D/g, '');
@@ -150,7 +150,7 @@ export class DigitSpanEngine {
 
     const expectedString = expectedSequence.join('');
     const isCorrect = cleanedInput === expectedString;
-    const points = isCorrect ? 1 : 0;
+    const points = isCorrect ? (this.currentTrialIndex === 0 ? 2 : 1) : 0;
 
     if (isCorrect) {
       soundCtrl.playSuccess();
@@ -183,33 +183,60 @@ export class DigitSpanEngine {
     };
 
     if (this.currentTrialIndex === 0) {
-      evaluation.hasNextTrialInItem = true;
-      this.currentTrialIndex = 1;
-      this.notifyState();
-      return evaluation;
+      if (isCorrect) {
+        // Réussite dès le premier essai : on valide le niveau directement sans faire le deuxième essai
+        evaluation.hasNextTrialInItem = false;
+        if (this.currentItemIndex + 1 >= this.sequenceSet.length) {
+          evaluation.isSubtestComplete = true;
+        }
+      } else {
+        // Échec sur le premier essai : deuxième chance accordée sur la 2ème série
+        evaluation.hasNextTrialInItem = true;
+      }
     } else {
       const [t1Score, t2Score] = this.currentLengthScores;
 
       if (t1Score === 0 && t2Score === 0) {
         evaluation.shouldDiscontinue = true;
         evaluation.isSubtestComplete = true;
-        this.handleSubtestCompletion();
-        return evaluation;
+      } else if (this.currentItemIndex + 1 >= this.sequenceSet.length) {
+        evaluation.isSubtestComplete = true;
       }
+    }
 
+    return evaluation;
+  }
+
+  advanceToNext(evaluation) {
+    if (!evaluation) return;
+
+    if (evaluation.isSubtestComplete) {
+      this.handleSubtestCompletion();
+      return;
+    }
+
+    if (evaluation.hasNextTrialInItem) {
+      this.currentTrialIndex = 1;
+      this.notifyState();
+    } else {
       this.currentItemIndex++;
       this.currentTrialIndex = 0;
       this.currentLengthScores = [null, null];
 
       if (this.currentItemIndex >= this.sequenceSet.length) {
-        evaluation.isSubtestComplete = true;
         this.handleSubtestCompletion();
-        return evaluation;
+        return;
       }
 
       this.notifyState();
-      return evaluation;
     }
+  }
+
+  submitAnswer(rawInput) {
+    const evaluation = this.evaluateAnswer(rawInput);
+    if (!evaluation) return null;
+    this.advanceToNext(evaluation);
+    return evaluation;
   }
 
   handleSubtestCompletion() {

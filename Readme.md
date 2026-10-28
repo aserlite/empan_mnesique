@@ -1,4 +1,4 @@
-# Empan Mnésique (WISC-IV)
+# Empan Mnésique (WAIS-IV)
 
 Application pas officielle Empan Mnésique (Direct & Inverse)
 
