@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Empan Mnésique WISC-IV — Direct & Inverse</title>
+  <meta name="description" content="Application psychométrique d'évaluation de la mémoire de travail et de l'empan mnésique selon le protocole standardisé WISC-IV (Direct et Inverse).">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="brand">
+      <span class="brand-badge">WISC-IV</span>
+      <h1 class="brand-title">Épreuve d'Empan de Chiffres</h1>
+    </div>
+    <div class="header-controls">
+      <button id="btn-toggle-sound" class="icon-btn" title="Activer / Désactiver les signaux sonores" aria-label="Son">
+        <svg id="icon-sound-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+          <line x1="23" y1="9" x2="17" y2="15"></line>
+          <line x1="17" y1="9" x2="23" y2="15"></line>
+        </svg>
+        <svg id="icon-sound-on" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        </svg>
+      </button>
+
+      <button id="btn-toggle-theme" class="icon-btn" title="Basculer entre thème clair et thème sombre" aria-label="Thème">
+        <svg id="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        <svg id="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="app-main">
+    <div class="view-container">
+
+      <section id="view-welcome" class="view active">
+        <div class="card welcome-card">
+          <h2 class="welcome-title">Test d'Empan Mnésique</h2>
+          <p class="welcome-desc">
+            Protocole standardisé issu de l'échelle d'intelligence de Wechsler (WISC-IV). Cadence calibrée à 1 chiffre par seconde (800ms de stimulus, 200ms d'intervalle).
+          </p>
+
+          <div class="mode-selector-grid">
+            <button class="mode-card-btn featured" data-mode="full" id="btn-mode-full">
+              <div class="mode-card-info">
+                <h3>Test Complet (Recommandé)</h3>
+                <p>Empan Direct (2 à 9 chiffres) puis Empan Inverse (2 à 8 chiffres)</p>
+              </div>
+              <span class="mode-arrow">→</span>
+            </button>
+
+            <button class="mode-card-btn" data-mode="direct" id="btn-mode-direct">
+              <div class="mode-card-info">
+                <h3>Empan Direct uniquement</h3>
+                <p>Répétition dans l'ordre exact d'apparition (2 à 9 chiffres)</p>
+              </div>
+              <span class="mode-arrow">→</span>
+            </button>
+
+            <button class="mode-card-btn" data-mode="inverse" id="btn-mode-inverse">
+              <div class="mode-card-info">
+                <h3>Empan Inverse uniquement</h3>
+                <p>Répétition en ordre inversé (du dernier au premier, 2 à 8 chiffres)</p>
+              </div>
+              <span class="mode-arrow">→</span>
+            </button>
+          </div>
+
+          <div class="options-box">
+            <div class="option-row">
+              <span>Séries numériques :</span>
+              <select id="select-sequence-source" class="select-clean">
+                <option value="standard" selected>Séries officielles WISC-IV</option>
+                <option value="random">Générateur aléatoire conforme (sans doublons consécutifs)</option>
+              </select>
+            </div>
+            <div class="option-row">
+              <span>Lancement de l'essai :</span>
+              <select id="select-autostart" class="select-clean">
+                <option value="manual" selected>Validation manuelle du sujet ("Prêt")</option>
+                <option value="auto">Défilement continu automatique</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-test" class="view">
+        <div class="card test-stage-card">
+          <div class="test-meta-header">
+            <span id="badge-current-subtest" class="badge-subtest">
+              <span class="pulse-dot"></span>
+              <span id="subtest-name-text">Empan Direct</span>
+            </span>
+            <span id="test-progress-text" class="test-progress-indicator">
+              Longueur : 2 chiffres | Essai : 1/2
+            </span>
+          </div>
+
+          <div id="test-instructions-text" class="test-instructions-bar">
+            Restituez les chiffres dans l'ordre exact d'apparition.
+          </div>
+
+          <div class="stimulus-center-stage">
+            <div id="ready-prompt" class="ready-prompt">
+              <p>Fixez le centre de l'écran lorsque vous êtes prêt(e).</p>
+              <button id="btn-start-trial" class="btn-primary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+                Lancer l'essai (Espace)
+              </button>
+            </div>
+
+            <div id="stimulus-digit" class="stimulus-digit empty" aria-live="polite"></div>
+
+            <div id="sequence-timeline" class="sequence-timeline" style="display:none;"></div>
+          </div>
+
+          <div id="response-zone" class="response-zone">
+            <div class="response-input-wrapper">
+              <input
+                type="text"
+                id="response-input"
+                class="response-input"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                autocomplete="off"
+                placeholder="— — —"
+                maxlength="12"
+                aria-label="Saisie de la réponse"
+              />
+              <div class="input-instructions">Saisissez les chiffres puis appuyez sur Entrée</div>
+            </div>
+
+            <div class="keypad-grid" id="virtual-keypad">
+              <button type="button" class="keypad-btn" data-key="1">1</button>
+              <button type="button" class="keypad-btn" data-key="2">2</button>
+              <button type="button" class="keypad-btn" data-key="3">3</button>
+              <button type="button" class="keypad-btn" data-key="4">4</button>
+              <button type="button" class="keypad-btn" data-key="5">5</button>
+              <button type="button" class="keypad-btn" data-key="6">6</button>
+              <button type="button" class="keypad-btn" data-key="7">7</button>
+              <button type="button" class="keypad-btn" data-key="8">8</button>
+              <button type="button" class="keypad-btn" data-key="9">9</button>
+              <button type="button" class="keypad-btn action-btn" data-action="clear" title="Effacer tout">C</button>
+              <button type="button" class="keypad-btn action-btn" data-action="backspace" title="Effacer le dernier">⌫</button>
+              <button type="button" class="keypad-btn action-btn" data-action="submit" style="color:var(--accent-primary); font-weight:700;">OK</button>
+            </div>
+
+            <div class="submit-btn-row">
+              <button id="btn-submit-answer" class="btn-primary btn-validate">
+                Valider la réponse (Entrée)
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section id="view-transition" class="view">
+        <div class="card transition-card">
+          <div class="transition-icon">⇄</div>
+          <h2 class="transition-title">Première épreuve terminée</h2>
+          <div id="transition-summary-pill" class="transition-score-pill">
+            Score Empan Direct : 12 / 16 (Empan max : 6)
+          </div>
+
+          <div class="instruction-callout">
+            <p><strong>Nouvelle consigne pour l'Empan Inverse :</strong></p>
+            <p style="margin-top:0.5rem;">
+              Vous allez maintenant voir une autre série de chiffres. Cette fois-ci, vous devrez les restituer dans l'ordre <strong>INVERSE</strong> (du dernier au premier chiffre apparu).
+            </p>
+            <p style="margin-top:0.4rem; font-style:italic;">
+              Exemple : Si vous voyez <strong>7 — 1</strong>, vous devez taper <strong>1 — 7</strong>.
+            </p>
+          </div>
+
+          <button id="btn-proceed-inverse" class="btn-primary" style="margin: 0 auto;">
+            Démarrer l'Empan Inverse
+          </button>
+        </div>
+      </section>
+
+      <section id="view-results" class="view">
+        <div class="card results-card">
+          
+          <div class="results-header">
+            <div>
+              <h2 class="results-title">Bilan Psychométrique</h2>
+              <div id="results-date-time" class="results-date">Date de passation : 28 octobre 2026</div>
+            </div>
+            <span class="brand-badge">WISC-IV</span>
+          </div>
+
+          <div class="metrics-grid">
+            <div class="metric-box" id="metric-box-direct">
+              <span class="metric-label">Empan Direct</span>
+              <div class="metric-score" id="res-score-direct">
+                0 <span class="denom">/ 16</span>
+              </div>
+              <div class="metric-span-info">
+                Empan maximal : <strong id="res-span-direct">0</strong> chiffres
+              </div>
+            </div>
+
+            <div class="metric-box" id="metric-box-inverse">
+              <span class="metric-label">Empan Inverse</span>
+              <div class="metric-score" id="res-score-inverse">
+                0 <span class="denom">/ 16</span>
+              </div>
+              <div class="metric-span-info">
+                Empan maximal : <strong id="res-span-inverse">0</strong> chiffres
+              </div>
+            </div>
+
+            <div class="metric-box highlight" id="metric-box-total">
+              <span class="metric-label">Score Brut Total</span>
+              <div class="metric-score" id="res-score-total">
+                0 <span class="denom">/ 32</span>
+              </div>
+              <div class="metric-span-info">
+                Règle d'arrêt : <strong>2 échecs consécutifs</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="clinical-notes">
+            <h4>Repères neuropsychologiques (Wechsler) :</h4>
+            <p>
+              • <strong>Empan Direct</strong> évalue principalement la capacité de stockage passif de la boucle phonologique (empan moyen attendu : 6 à 7 chiffres chez l'adulte, 4 à 6 selon l'âge chez l'enfant).<br>
+              • <strong>Empan Inverse</strong> mobilise activement l'administrateur central de la mémoire de travail pour manipuler mentalement les informations (empan attendu : 4 à 5 chiffres). Un écart direct/inverse supérieur à 2 chiffres suggère une dissociation entre stockage passif et manipulation exécutive.
+            </p>
+          </div>
+
+          <div class="audit-section">
+            <div class="audit-section-header">
+              <h3>Détail des essais administrés</h3>
+              <span style="font-size:0.8rem; color:var(--text-muted);">Protocole chronologique</span>
+            </div>
+            <div class="table-responsive">
+              <table class="audit-table">
+                <thead>
+                  <tr>
+                    <th>Sous-test</th>
+                    <th>Longueur</th>
+                    <th>Essai</th>
+                    <th>Séquence présentée</th>
+                    <th>Attendu</th>
+                    <th>Réponse</th>
+                    <th>Statut</th>
+                    <th>Points</th>
+                  </tr>
+                </thead>
+                <tbody id="audit-table-body">
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="results-actions">
+            <button id="btn-copy-report" class="btn-secondary" title="Copier le compte-rendu dans le presse-papier">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              Copier le compte-rendu
+            </button>
+            <button id="btn-print-report" class="btn-secondary" title="Imprimer ou enregistrer en PDF">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+              </svg>
+              Imprimer / PDF
+            </button>
+            <button id="btn-restart-test" class="btn-primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="1 4 1 10 7 10"></polyline>
+                <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+              </svg>
+              Recommencer le test
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <div id="toast-notice" class="toast-notice">Compte-rendu copié avec succès !</div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
