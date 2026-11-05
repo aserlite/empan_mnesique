@@ -443,8 +443,12 @@ body {
 .sequence-timeline {
   display: flex;
   justify-content: center;
-  gap: 6px;
-  margin-top: 1rem;
+  align-items: center;
+  gap: 8px;
+  position: absolute;
+  top: calc(50% + 4.5rem);
+  left: 0;
+  right: 0;
   min-height: 8px;
 }
 
@@ -1057,6 +1061,10 @@ body {
 
   .stimulus-digit {
     font-size: 5.5rem;
+  }
+
+  .sequence-timeline {
+    top: calc(50% + 3.5rem);
   }
 
   .metrics-grid {

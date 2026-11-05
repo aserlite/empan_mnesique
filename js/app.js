@@ -147,9 +147,10 @@ function updateStateHeader(info) {
   if (!info) return;
 
   DOM.subtestNameText.textContent = info.subtestName;
-  DOM.testProgressText.textContent = info.trialNumber === 1
-    ? `Longueur : ${info.length} chiffres | Essai 1`
-    : `Longueur : ${info.length} chiffres | Essai 2 (rattrapage)`;
+  DOM.testProgressText.textContent =
+    info.trialNumber === 1
+      ? `Longueur : ${info.length} chiffres | Essai 1`
+      : `Longueur : ${info.length} chiffres | Essai 2 (rattrapage)`;
   DOM.testInstructionsText.textContent = info.instructions;
 
   // Préparation de la barre de progression par points
@@ -418,7 +419,9 @@ function buildClinicalTextReport(results) {
   results.trials.forEach((t) => {
     const sub = t.subtest === "direct" ? "Direct " : "Inverse";
     const rep = t.userInput || "Vide";
-    const st = t.isCorrect ? `Réussi (${t.points} pt${t.points > 1 ? "s" : ""})` : "Échec (0 pt)";
+    const st = t.isCorrect
+      ? `Réussi (${t.points} pt${t.points > 1 ? "s" : ""})`
+      : "Échec (0 pt)";
     txt += `${sub} | Longueur ${t.length} | Essai ${t.trialNumber} | ${t.targetSequence.join("-")} | ${t.expectedString} | ${rep} | ${st}\n`;
   });
 
