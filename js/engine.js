@@ -9,7 +9,7 @@ export const TEST_MODES = {
 
 export class DigitSpanEngine {
   constructor(options = {}) {
-    this.digitDurationMs = options.digitDurationMs || 800;
+    this.digitDurationMs = options.digitDurationMs || 1000;
     this.intervalDurationMs = options.intervalDurationMs || 200;
     this.fixationDurationMs = options.fixationDurationMs || 1000;
     this.useRandom = options.useRandom || false;

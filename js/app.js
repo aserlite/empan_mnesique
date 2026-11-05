@@ -99,7 +99,7 @@ function initEngine() {
   const isAutoStart = DOM.selectAutostart.value === "auto";
 
   engine = new DigitSpanEngine({
-    digitDurationMs: 800, // 800ms affiché (exigence WAIS-IV)
+    digitDurationMs: 1000, // 1s affiché (exigence WAIS-IV)
     intervalDurationMs: 200, // 200ms intervalle = 1 seconde / chiffre
     fixationDurationMs: 900, // Fixation préparatoire
 
